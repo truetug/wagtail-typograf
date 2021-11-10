@@ -1,10 +1,13 @@
 import json
 import logging
-from appconf.utils import import_attribute
-from django.conf import settings
+from importlib import import_module
+
+
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,19 +28,23 @@ def typograf_api(request, **kwargs):
     try:
         data_json = json.loads(request.body)
 
-        # process
-        cls = import_attribute(TYPOGRAF_CLASS)
-        for block in data_json["blocks"]:
-            block["text"] = cls(block["text"]).process()
+        # import        
+        module_name, cls_name = TYPOGRAF_CLASS.rsplit('.', 1)
+        module_obj = import_module(module_name)
+        cls_obj = getattr(module_obj, obj_name)
 
-        response = JsonResponse({
-            "success": True,
-            "data": data_json,
-        })
+        # process
+        for block in data_json["blocks"]:
+            block["text"] = cls_obj(block["text"]).process()
     except Exception as e:
         response = JsonResponse({
             "success": False,
             "error": e.__str__(),
+        })
+    else:
+        response = JsonResponse({
+            "success": True,
+            "data": data_json,
         })
 
     logger.debug(
