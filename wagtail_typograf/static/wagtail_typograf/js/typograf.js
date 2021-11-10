@@ -10,6 +10,8 @@ class TypografSource extends React.Component {
         const { editorState, entityType, onComplete } = this.props;
 
         const rawContent = serialiseEditorStateToRaw(editorState);
+        // maybe use something inplace like
+        // https://github.com/Nufeen/typo
         const response = await fetch(
             apiUrl, {
                 body: JSON.stringify(rawContent),
@@ -17,10 +19,14 @@ class TypografSource extends React.Component {
             }
         ).then(response => response.json());
 
-        const newContent = createEditorStateFromRaw(response.data).getCurrentContent();
-        const nextState = EditorState.push(editorState, newContent, 'adjust-depth')
-
-        onComplete(nextState);
+        if(response.success) {
+            const newContent = createEditorStateFromRaw(response.data).getCurrentContent();
+            const nextState = EditorState.push(editorState, newContent, 'adjust-depth')
+            onComplete(nextState);
+        }
+        else {
+            onComplete(editorState);
+        }
     }
 
     render() {
