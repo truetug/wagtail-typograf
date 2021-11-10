@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 TYPOGRAF_CLASS = getattr(
-    settings, "WAGTAIL_TYPOGRAF",
+    settings,
+    "WAGTAIL_TYPOGRAF",
     "wagtail_typograf.handlers.Typograf",
 )
 
@@ -28,24 +29,28 @@ def typograf_api(request, **kwargs):
     try:
         data_json = json.loads(request.body)
 
-        # import        
-        module_name, cls_name = TYPOGRAF_CLASS.rsplit('.', 1)
+        # import
+        module_name, cls_name = TYPOGRAF_CLASS.rsplit(".", 1)
         module_obj = import_module(module_name)
-        cls_obj = getattr(module_obj, obj_name)
+        cls_obj = getattr(module_obj, cls_name)
 
         # process
         for block in data_json["blocks"]:
             block["text"] = cls_obj(block["text"]).process()
-    except Exception as e:
-        response = JsonResponse({
-            "success": False,
-            "error": e.__str__(),
-        })
+    except Exception as exc:
+        response = JsonResponse(
+            {
+                "success": False,
+                "error": exc.__str__(),
+            }
+        )
     else:
-        response = JsonResponse({
-            "success": True,
-            "data": data_json,
-        })
+        response = JsonResponse(
+            {
+                "success": True,
+                "data": data_json,
+            }
+        )
 
     logger.debug(
         "Typograf response: %s...",
