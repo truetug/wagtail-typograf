@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wagtail-typograf"
-version = "0.1.0"
+version = "0.1.1"
 description = "Brings russian typography to Wagtail rich text editor based on draftail"
 authors = ["Sergey Trofimov <truetug@gmail.com>"]
 license = "MIT"
