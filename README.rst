@@ -13,13 +13,13 @@ Demo
 Installation
 ============
 
-* Install with pip 
+Install with pip 
 
 ::
 
     pip install wagtail-typograf
 
-* Add app name to your list of installed apps
+Add app name to your list of installed apps
   
 ::
 
@@ -28,7 +28,8 @@ Installation
         "wagtail_typograf",
     ]
     
-* Add typograf url to your urlpatterns (for now "/api/typograf/" is strongly hardcoded in js)
+
+Add typograf url to your urlpatterns (for now "/api/typograf/" is strongly hardcoded in js)
 
 ::
 
@@ -39,7 +40,7 @@ Installation
     ]
 
 
-* If you use limit number of features in RichTextBlock, don't forget to add ``typograf`` to its list
+If you use limit number of features in RichTextBlock, don't forget to add ``typograf`` to its list
 
 ::
     
